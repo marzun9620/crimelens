@@ -15,6 +15,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { useSidebarStore } from "@/lib/store";
 
 export function NavMain({
   items,
@@ -30,6 +31,8 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const { expanedGroup, setExpanedGroup } = useSidebarStore();
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -38,11 +41,16 @@ export function NavMain({
           <Collapsible
             key={item.title}
             asChild
-            defaultOpen={item.isActive}
+            open={expanedGroup === item.title}
             className="group/collapsible"
           >
             <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
+              <CollapsibleTrigger
+                asChild
+                onClick={() => {
+                  setExpanedGroup(item.title);
+                }}
+              >
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
