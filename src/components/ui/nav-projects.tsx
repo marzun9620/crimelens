@@ -102,11 +102,7 @@ export function NavProjects({
               <AlertDialogTitle>Want to know more about us?</AlertDialogTitle>
               <AlertDialogDescription>
                 You can visit our{" "}
-                <Link
-                  to="https://www.linkedin.com/in/abrar-mahir-esam-47b735217/"
-                  target="_blank"
-                  className="text-chart-3 font-bold"
-                >
+                <Link to="/" target="_blank" className="text-chart-3 font-bold">
                   LinkedIn
                 </Link>{" "}
                 page for more information
