@@ -1,7 +1,10 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
+import userController from "./controllers/userController.js";
 
 const app = new Hono();
+
+app.route("/user", userController);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
