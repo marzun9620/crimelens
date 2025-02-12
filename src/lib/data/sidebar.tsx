@@ -1,8 +1,10 @@
 import {
+  Bell,
   BookOpen,
   Bot,
   Database,
   GalleryVerticalEnd,
+  Siren,
   SquareActivity,
   SquareTerminal,
   WashingMachine,
@@ -26,7 +28,6 @@ export const data = {
   navMain: [
     {
       title: "General",
-      url: "#",
       icon: SquareTerminal,
       items: [
         {
@@ -39,13 +40,12 @@ export const data = {
         },
         {
           title: "Crime Feed",
-          url: "/profile/general/feed",
+          url: "/profile/general/crime-feed",
         },
       ],
     },
     {
       title: "My Profile",
-      url: "#",
       icon: Bot,
       items: [
         {
@@ -53,18 +53,28 @@ export const data = {
           url: "/profile/my-profile/info",
         },
         {
-          title: "My Report",
+          title: "My Reports",
           url: "/profile/my-profile/my-reports",
         },
+      ],
+    },
+
+    {
+      title: "Alert & Update",
+      icon: Bell,
+      items: [
         {
-          title: "Edit Profile",
-          url: "/profile/my-profile/edit-profile",
+          title: "Notification",
+          url: "/profile/alert-update/notification",
+        },
+        {
+          title: "Emergency",
+          url: "/profile/alert-update/emergency",
         },
       ],
     },
     {
       title: "Survey",
-      url: "#",
       icon: BookOpen,
       items: [
         {
@@ -77,25 +87,6 @@ export const data = {
         },
       ],
     },
-    // {
-    //   title: "Site Settings",
-    //   url: "#",
-    //   icon: Settings2,
-    //   items: [
-    //     {
-    //       title: "General",
-    //       url: "/profile/site-settings/general",
-    //     },
-    //     {
-    //       title: "Employees",
-    //       url: "/profile/site-settings/employees",
-    //     },
-    //     {
-    //       title: "Branch",
-    //       url: "/profile/site-settings/branch",
-    //     },
-    //   ],
-    // },
   ],
   projects: [
     {

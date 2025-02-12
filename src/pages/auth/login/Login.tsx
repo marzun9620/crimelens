@@ -105,10 +105,10 @@ const Login: React.FC = () => {
       {/* Login Card */}
       <div className="shadow-2xl border-4 rounded-2xl border-blue-300 flex justify-center items-center">
         <div
-          className="animate-fade-in-up lg:max-w-6xl md:max-w-2xl max-w-lg"
+          className="animate-fade-in-up lg:max-w-6xl md:max-w-2xl max-w-lg flex flex-col md:flex-row"
           style={styles.cardContainer}
         >
-          {/* Left Section with Background Image */}
+          {/* Left Section with Background Image (Hidden on Small & Medium Screens) */}
           <div className="hidden lg:flex" style={styles.bgImage} />
 
           {/* Right Section with Form */}

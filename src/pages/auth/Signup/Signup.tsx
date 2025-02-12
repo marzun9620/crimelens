@@ -2,10 +2,12 @@ import type React from "react";
 import { useState } from "react";
 import bg from "../../../assets/signupbg.jpg";
 import VerificationModal from "./VerificationModal";
+
 import { toast } from "sonner";
 import { createUser } from "@/apis/userApis";
 import { sendEmail } from "@/lib/send-mail";
 import { Link } from "react-router-dom";
+
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
@@ -99,6 +101,7 @@ const Signup: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (!termsChecked) {
@@ -222,6 +225,7 @@ const Signup: React.FC = () => {
                 </span>
               </label>
             </div>
+
             <button
               type="button"
               style={styles.button}
