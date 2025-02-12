@@ -88,7 +88,7 @@ export function NavProjects({
           </SidebarMenuItem>
         ))}
 
-        <AlertDialog>
+        {/* <AlertDialog>
           <AlertDialogTrigger asChild>
             <SidebarMenuItem>
               <SidebarMenuButton className="text-sidebar-foreground/70">
@@ -113,7 +113,7 @@ export function NavProjects({
               <AlertDialogAction>Continue</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
-        </AlertDialog>
+        </AlertDialog> */}
       </SidebarMenu>
     </SidebarGroup>
   );

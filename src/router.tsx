@@ -15,6 +15,9 @@ import Heatmap from "./pages/profile/survey/heatmap/Heatmap";
 import Leaderboard from "./pages/profile/survey/leaderboard/Leaderboard";
 import Login from "./pages/auth/login/Login";
 import Signup from "./pages/auth/Signup/Signup";
+import AlertUpdate from "./pages/profile/alert-update/AlertUpdate";
+import Notification from "./pages/profile/alert-update/notification/Notification";
+import Emergency from "./pages/profile/alert-update/emergency/Emergency";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +76,20 @@ const router = createBrowserRouter([
               {
                 path: "my-reports",
                 element: <MyReports />,
+              },
+            ],
+          },
+          {
+            path: "alert-update",
+            element: <AlertUpdate/>,
+            children: [
+              {
+                path: "notification",
+                element: <Notification/>,
+              },
+              {
+                path: "emergency",
+                element: <Emergency />,
               },
             ],
           },
