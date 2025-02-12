@@ -7,7 +7,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, AlertCircle, MapPin } from "lucide-react";
 
-// Custom icons for different crime severity levels
 const crimeIcons = {
   low: new L.Icon({
     iconUrl: "https://cdn-icons-png.flaticon.com/512/2913/2913136.png",
@@ -23,7 +22,7 @@ const crimeIcons = {
   }),
 };
 
-// **Dummy Crime Data (Replace with API)**
+// Dummy Crime Data
 const crimeReports = [
   {
     id: 1,
