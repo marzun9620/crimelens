@@ -16,6 +16,7 @@ import Heatmap from "./pages/profile/survey/heatmap/Heatmap";
 import Leaderboard from "./pages/profile/survey/leaderboard/Leaderboard";
 import Login from "./pages/auth/login/Login";
 import Signup from "./pages/auth/Signup/Signup";
+import Home from "./pages/landing/Home";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <div>Hello</div>,
+        element: <Home />,
         children: [],
       },
       {

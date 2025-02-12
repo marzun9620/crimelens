@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import bg from "../../../assets/signupbg.jpg";
 import VerificationModal from "./VerificationModal";
+import { toast } from "sonner";
+import { createUser } from "@/apis/userApis";
+import { sendEmail } from "@/lib/send-mail";
+import { Link } from "react-router-dom";
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
@@ -69,15 +74,17 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
+type FormDataType = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  profile_image: string;
+};
+
 const Signup: React.FC = () => {
   // ✅ Properly typed useState
-  const [formData, setFormData] = useState<{
-    name: string;
-    email: string;
-    phone: string;
-    password: string;
-    profile_image: string;
-  }>({
+  const [formData, setFormData] = useState<FormDataType>({
     name: "",
     email: "",
     phone: "",
@@ -86,14 +93,64 @@ const Signup: React.FC = () => {
   });
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [termsChecked, setTermsChecked] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleSubmit = async () => {
+    if (!termsChecked) {
+      toast.error("Please agree to the terms and conditions to proceed.");
+      return;
+    }
+
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.password
+    ) {
+      toast.error("Please fill all the fields to proceed.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await createUser(formData);
+
+      if (response) {
+        setIsModalOpen(true);
+        const { message, OTP } = response;
+
+        toast.success(message);
+        sendEmail(
+          "mistdecoders@gmail.com",
+          formData.email,
+          "OTP Verification",
+          `Your OTP is: ${OTP}. This will exprire in 10 minutes.`
+        );
+
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          password: "",
+          profile_image: "",
+        });
+        setTermsChecked(false);
+        setLoading(false);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="animate-flicker" style={styles.container}>
-      <div style={styles.overlay}></div>
+      <div style={styles.overlay} />
 
       <div className="shadow-2xl border-4 border-blue-300 rounded-2xl flex justify-center items-center">
         <div
@@ -152,7 +209,12 @@ const Signup: React.FC = () => {
               onChange={handleChange}
             />
             <div className="flex items-center mb-4">
-              <input type="checkbox" id="terms" className="mr-2" />
+              <input
+                type="checkbox"
+                id="terms"
+                className="mr-2"
+                onClick={() => setTermsChecked(!termsChecked)}
+              />
               <label htmlFor="terms" className="text-gray-300">
                 By signing up, I agree with{" "}
                 <span style={{ color: "#66fcf1", cursor: "pointer" }}>
@@ -161,21 +223,41 @@ const Signup: React.FC = () => {
               </label>
             </div>
             <button
+              type="button"
               style={styles.button}
               onMouseOver={(e) => {
                 const target = e.target as HTMLButtonElement;
                 target.style.transform = "scale(1.05)";
                 target.style.backgroundColor = "#0e1b33";
               }}
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => handleSubmit()}
               onMouseOut={(e) => {
                 const target = e.target as HTMLButtonElement;
                 target.style.transform = "scale(1)";
                 target.style.backgroundColor = "#1c3d73";
               }}
+              onFocus={(e) => {
+                const target = e.target as HTMLButtonElement;
+                target.style.transform = "scale(1.05)";
+                target.style.backgroundColor = "#0e1b33";
+              }}
+              onBlur={(e) => {
+                const target = e.target as HTMLButtonElement;
+                target.style.transform = "scale(1)";
+                target.style.backgroundColor = "#1c3d73";
+              }}
             >
-              Login
+              {loading ? "Loading..." : "Sign Up"}
             </button>
+            <span className="text-gray-300 mt-4">
+              Already have an account?{" "}
+              <Link
+                to={"/login"}
+                style={{ color: "#66fcf1", cursor: "pointer" }}
+              >
+                Login here
+              </Link>
+            </span>
           </div>
         </div>
       </div>
