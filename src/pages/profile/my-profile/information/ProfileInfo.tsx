@@ -13,7 +13,7 @@ const ProfileInfo: React.FC = () => {
     email: "emim9fr620@gmail.com",
     phone: "+8801787599766",
     bio: "Passionate crime reporter & community advocate.",
-    verified: false,
+    verified: false, 
     profile_image:
       "https://res.cloudinary.com/da8v9ysli/image/upload/v1739296726/aazrzuirqb2u6zky8twx.jpg",
     created_at: new Date(1739296726404).toLocaleString(),

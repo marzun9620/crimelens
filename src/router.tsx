@@ -30,11 +30,6 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <div>Hello</div>,
-        children: [],
-      },
-      {
-        path: "/login",
         element: <Login />,
         children: [],
       },
@@ -81,11 +76,11 @@ const router = createBrowserRouter([
           },
           {
             path: "alert-update",
-            element: <AlertUpdate/>,
+            element: <AlertUpdate />,
             children: [
               {
                 path: "notification",
-                element: <Notification/>,
+                element: <Notification />,
               },
               {
                 path: "emergency",
