@@ -13,6 +13,7 @@ const response = await MongoClient.connect(ATLAS).catch((err) => {
 const db_instance: Db = response?.db(DATABASE) as Db;
 const db = {
   users: db_instance.collection<User>("users"),
+  posts: db_instance.collection("posts"),
 };
 
 export { db };

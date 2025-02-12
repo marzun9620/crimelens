@@ -1,6 +1,11 @@
 import type React from "react";
 import bg from "../../../assets/loginbg.jpg";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "@/apis/userApis";
+import { useState } from "react";
+import { toast } from "sonner";
+import Cookies from "js-cookie";
+import { useAuthStore } from "@/lib/store";
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
@@ -79,6 +84,38 @@ const styles: Record<string, React.CSSProperties> = {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleLogin = async () => {
+    if (!formData.email || !formData.password) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+
+    try {
+      const response = await loginUser(formData);
+
+      toast.success("Login Successful");
+      const { accessToken, refreshToken } = response;
+      setAccessToken(accessToken);
+      localStorage.setItem("accessToken", accessToken);
+      Cookies.set("refreshToken", refreshToken, {
+        secure: true,
+      });
+
+      setTimeout(() => {
+        navigate("/profile/general/dashboard");
+      }, 1000);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="animate-flicker" style={styles.container}>
       <div style={styles.overlay} />
@@ -126,6 +163,8 @@ const Login: React.FC = () => {
             {/* Input Fields */}
             <input
               type="text"
+              name="email"
+              onChange={handleChange}
               placeholder="Username"
               style={styles.inputField}
               onFocus={(e) => {
@@ -141,6 +180,8 @@ const Login: React.FC = () => {
             />
             <input
               type="password"
+              name="password"
+              onChange={handleChange}
               placeholder="Password"
               style={styles.inputField}
               onFocus={(e) => {
@@ -195,6 +236,7 @@ const Login: React.FC = () => {
               <button
                 type="button"
                 style={styles.button}
+                onClick={handleLogin}
                 onMouseOver={(e) => {
                   const target = e.target as HTMLButtonElement;
                   target.style.transform = "scale(1.05)";

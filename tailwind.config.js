@@ -5,6 +5,10 @@ export default {
   theme: {
     container: {},
     extend: {
+      backgroundImage:
+      {
+        "login_bg": "url('./assets/images/login_bg.jpg')",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

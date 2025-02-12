@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import image1 from "@/assets/image1.jpg";
+import image2 from "@/assets/image2.jpg";
+import image3 from "@/assets/image3.jpg";
+
 import {
   Search,
   MapPin,
@@ -15,7 +19,6 @@ import {
   RefreshCw,
   Send,
 } from "lucide-react";
-
 
 //Comment
 interface CommentType {
@@ -33,7 +36,7 @@ interface CrimeReport {
   time: string;
   upvotes: number;
   downvotes: number;
-  comments: CommentType[]; 
+  comments: CommentType[];
 }
 
 // Dummy Crime Reports (Replace with API)
@@ -42,26 +45,45 @@ const crimeReports: CrimeReport[] = [
     id: 1,
     title: "Robbery at Downtown",
     description: "A store was looted last night in the downtown area...",
-    image: "https://source.unsplash.com/600x400/?crime,police",
+    image: image1,
     location: "Dhaka, Bangladesh",
     time: "2 hours ago",
     upvotes: 25,
     downvotes: 3,
-    comments: [],
+    comments: [
+      { text: "This is so sad!", proof: false },
+      { text: "I hope they catch the culprit soon.", proof: false },
+    ],
   },
   {
     id: 2,
     title: "Cyber Fraud in Online Banking",
     description: "Multiple people reported unauthorized transactions...",
-    image: "https://source.unsplash.com/600x400/?cyber,crime",
+    image: image2,
     location: "Chattogram, Bangladesh",
     time: "1 day ago",
     upvotes: 38,
     downvotes: 10,
-    comments: [],
+    comments: [
+      { text: "This is so sad!", proof: false },
+      { text: "I hope they catch the culprit soon.", proof: false },
+    ],
+  },
+  {
+    id: 3,
+    title: "Hit and Run Incident",
+    description: "A pedestrian was hit by a car and the driver fled...",
+    image: image3,
+    location: "Sylhet, Bangladesh",
+    time: "3 days ago",
+    upvotes: 15,
+    downvotes: 2,
+    comments: [
+      { text: "This is so sad!", proof: false },
+      { text: "I hope they catch the culprit soon.", proof: false },
+    ],
   },
 ];
-
 
 const CrimeFeed: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -124,7 +146,6 @@ const CrimeFeed: React.FC = () => {
     setCommentText("");
     toast.success("Comment added successfully!");
   };
-
 
   return (
     <div className="min-h-screen bg-[#0a0f1e] text-white p-4 md:p-6">
