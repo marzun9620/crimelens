@@ -56,10 +56,6 @@ export const data = {
           title: "My Report",
           url: "/profile/my-profile/my-reports",
         },
-        {
-          title: "Edit Profile",
-          url: "/profile/my-profile/edit-profile",
-        },
       ],
     },
     {

@@ -10,7 +10,6 @@ import CrimeFeed from "./pages/profile/General/crim-feed/CrimeFeed";
 import MyProfile from "./pages/profile/my-profile/MyProfile";
 import ProfileInfo from "./pages/profile/my-profile/information/ProfileInfo";
 import MyReports from "./pages/profile/my-profile/my-reports/MyReports";
-import EditProfile from "./pages/profile/my-profile/edit-profile/EditProfile";
 import Survey from "./pages/profile/survey/Survey";
 import Heatmap from "./pages/profile/survey/heatmap/Heatmap";
 import Leaderboard from "./pages/profile/survey/leaderboard/Leaderboard";
@@ -74,10 +73,6 @@ const router = createBrowserRouter([
               {
                 path: "my-reports",
                 element: <MyReports />,
-              },
-              {
-                path: "edit-profile",
-                element: <EditProfile />,
               },
             ],
           },

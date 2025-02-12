@@ -174,7 +174,7 @@ const Signup: React.FC = () => {
                 target.style.backgroundColor = "#1c3d73";
               }}
             >
-              Login
+              Signup
             </button>
           </div>
         </div>
