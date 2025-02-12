@@ -40,7 +40,7 @@ export const data = {
         },
         {
           title: "Crime Feed",
-          url: "/profile/general/crime-feed", // ✅ Fixed incorrect path
+          url: "/profile/general/crime-feed",
         },
       ],
     },

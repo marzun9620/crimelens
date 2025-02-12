@@ -60,7 +60,7 @@ const router = createBrowserRouter([
                 element: <ReportForm />,
               },
               {
-                path: "feed",
+                path: "crime-feed",
                 element: <CrimeFeed />,
               },
             ],

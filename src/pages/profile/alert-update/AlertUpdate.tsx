@@ -1,7 +1,7 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
 
 const AlertUpdate = () => {
-  return <div></div>;
+  return <Outlet />;
 };
 
 export default AlertUpdate;
