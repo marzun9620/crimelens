@@ -7,6 +7,8 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@hono/node-server": "^1.13.8",
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.8",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.5.1",
     "emailjs": "^4.0.3",

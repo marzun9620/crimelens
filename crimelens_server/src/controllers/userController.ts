@@ -3,9 +3,10 @@ import { db } from "../db/db.ts";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { type UploadApiOptions, v2 as cloudinary } from "cloudinary";
-import crypto from "crypto";
-import emailjs from "@emailjs/browser"; 
+import crypto from "node:crypto";
+import emailjs from "@emailjs/browser";
 import { toast } from "sonner";
+import type { User } from "../../../models/User.ts";
 
 const JWT_SECRET = crypto.randomBytes(64).toString("hex");
 const JWT_REFRESH_SECRET = crypto.randomBytes(64).toString("hex");
@@ -26,33 +27,6 @@ const cloudinaryOption: UploadApiOptions = {
   resource_type: "auto",
 };
 
-
-async function sendEmail(
-  email_from: string,
-  email_to: string,
-  from_name: string,
-  message_body: string
-) {
-  const form = {
-    from_email: email_from,
-    from_name: from_name,
-    to_email: email_to,
-    message: message_body,
-  };
-
-  try {
-    const response = await emailjs.send(
-      "service_3fy6krw",   
-      "template_beimqbq",   
-      form,
-      "E3-0vUQPbmVnJDhAa"   
-    );
-    console.log("Email sent successfully", response);
-  } catch (error: any) {
-    throw new Error(error.text);
-  }
-}
-
 const userController = new Hono();
 
 function generateOTP(): string {
@@ -63,7 +37,7 @@ userController.post("/register", async (c) => {
   const { name, email, phone, password, profile_image } = await c.req.json();
   const existingUser = await db.users.findOne({ email });
   if (existingUser) {
-    return c.json({ error: "User already exists with that email" }, 400);
+    return c.json({ error: "User already exists with that email" }, 409);
   }
 
   const saltRounds = 10;
@@ -72,7 +46,10 @@ userController.post("/register", async (c) => {
   let imageUrl = "";
   if (profile_image) {
     try {
-      const uploadResult = await cloudinary.uploader.upload(profile_image, cloudinaryOption);
+      const uploadResult = await cloudinary.uploader.upload(
+        profile_image,
+        cloudinaryOption
+      );
       imageUrl = uploadResult.secure_url;
     } catch (error: any) {
       return c.json({ error: "Failed to upload profile image" }, 500);
@@ -98,11 +75,15 @@ userController.post("/register", async (c) => {
 
   await db.users.insertOne(newUser);
 
-  
   const messageBody = `Your OTP code is: ${otp}`;
-  await sendEmail("noreply@yourdomain.com", email, "OTP Verification", messageBody);  // Correct function call
 
-  return c.json({ message: "User registered successfully. OTP has been sent to your email." }, 201);
+  return c.json(
+    {
+      message: "User registered successfully. OTP has been sent to your email.",
+      OTP: messageBody,
+    },
+    201
+  );
 });
 
 userController.post("/login", async (c) => {
@@ -119,14 +100,45 @@ userController.post("/login", async (c) => {
 
   const payload = { id: user.id, email: user.email };
   const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
-  const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: "7d" });
+  const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
+    expiresIn: "7d",
+  });
 
   return c.json({ accessToken, refreshToken });
 });
 
+userController.post("/resend-otp", async (c) => {
+  const { email } = await c.req.json();
+  const user = await db.users.findOne({ email });
+
+  if (!user) {
+    return c.json({ error: "User not found" }, 404);
+  }
+
+  if (user.verified) {
+    return c.json({ error: "User is already verified" }, 400);
+  }
+
+  const otp = generateOTP();
+  const otp_expires = new Date(Date.now() + 5 * 60 * 1000);
+
+  await db.users.updateOne(
+    { email },
+    { $set: { otp, otp_expires, updated_at: new Date() } }
+  );
+
+  const messageBody = `Your OTP code is: ${otp}`;
+
+  c.status(200);
+  return c.json({
+    message: "OTP has been sent to your email.",
+    OTP: messageBody,
+  });
+});
+
 userController.post("/verify-email", async (c) => {
   const { email, otp } = await c.req.json();
-  const user = await db.users.findOne({ email });
+  const user: any = await db.users.findOne({ email });
 
   if (!user) {
     return c.json({ error: "User not found" }, 404);
@@ -139,7 +151,7 @@ userController.post("/verify-email", async (c) => {
     return c.json({ error: "Invalid OTP" }, 400);
   }
   if (new Date() > new Date(user.otp_expires)) {
-    return c.json({ error: "OTP has expired. Please request a new one." }, 400);
+    return c.json({ error: "OTP has expired. Please request a new one." }, 401);
   }
 
   const updateResult = await db.users.updateOne(
@@ -149,6 +161,7 @@ userController.post("/verify-email", async (c) => {
       $unset: { otp: "", otp_expires: "" },
     }
   );
+
   if (updateResult.matchedCount === 0) {
     return c.json({ error: "User not found" }, 404);
   }
