@@ -64,12 +64,12 @@ const Leaderboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0f1e] text-white p-4 md:p-6">
+    <div className="min-h-screen text-white p-4 md:p-6">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <Card className="bg-gray-900 border border-gray-700">
+        <Card className="border border-gray-700">
           <CardHeader>
-            <CardTitle className="text-yellow-400 text-xl md:text-2xl flex items-center">
+            <CardTitle className="text-primary text-xl md:text-2xl flex items-center">
               <Trophy className="mr-2" size={28} /> Crime Reporting Leaderboard
             </CardTitle>
           </CardHeader>
@@ -112,12 +112,12 @@ const Leaderboard: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedData.map((user, index) => (
+                  {sortedData?.map((user, index) => (
                     <tr
                       key={user.id}
-                      className="border-b border-gray-700 hover:bg-gray-800"
+                      className="border-b border-gray-700 hover:bg-gray-200"
                     >
-                      <td className="p-3 font-bold text-yellow-400">
+                      <td className="p-3 font-bold text-yellow-800">
                         #{index + 1}
                       </td>
                       <td className="p-3 flex items-center">

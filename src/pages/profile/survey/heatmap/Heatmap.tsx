@@ -7,7 +7,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, AlertCircle, MapPin } from "lucide-react";
 
-// Custom icons for different crime severity levels
 const crimeIcons = {
   low: new L.Icon({
     iconUrl: "https://cdn-icons-png.flaticon.com/512/2913/2913136.png",
@@ -23,7 +22,7 @@ const crimeIcons = {
   }),
 };
 
-// **Dummy Crime Data (Replace with API)**
+// Dummy Crime Data
 const crimeReports = [
   {
     id: 1,
@@ -80,11 +79,11 @@ const Heatmap: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0f1e] text-white p-4 md:p-6">
+    <div className="min-h-screen  text-white p-4 md:p-6">
       <div className="max-w-6xl mx-auto">
-        <Card className="bg-gray-900 border border-gray-700">
+        <Card className="border border-gray-700">
           <CardHeader>
-            <CardTitle className="text-yellow-400 text-xl md:text-2xl flex items-center">
+            <CardTitle className="text-primary text-xl md:text-2xl flex items-center">
               <MapPin className="mr-2" size={28} /> Crime Heatmap
             </CardTitle>
           </CardHeader>
