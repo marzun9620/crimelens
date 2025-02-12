@@ -1,4 +1,5 @@
 import Axios from "./axios";
+import Cookies from "js-cookie";
 
 type FormDataType = {
   name: string;
@@ -15,13 +16,16 @@ const createUser = async (userInfo: FormDataType) => {
     switch (response.status) {
       case 201:
         return response.data;
-      case 409:
-        throw new Error("User already exists");
       default:
         throw new Error("Something went wrong");
     }
   } catch (error: any) {
-    throw new Error(error.message);
+    switch (error.response.status) {
+      case 409:
+        throw new Error("User already exists");
+      default:
+        throw new Error(error.message);
+    }
   }
 };
 
@@ -32,6 +36,12 @@ const verifyUser = async (email: string, otp: string) => {
     switch (response.status) {
       case 200:
         return response.data;
+
+      default:
+        throw new Error("Something went wrong");
+    }
+  } catch (error: any) {
+    switch (error.response.status) {
       case 400:
         throw new Error("Invalid OTP");
       case 404:
@@ -39,10 +49,8 @@ const verifyUser = async (email: string, otp: string) => {
       case 401:
         throw new Error("OTP expired");
       default:
-        throw new Error("Something went wrong");
+        throw new Error(error.message);
     }
-  } catch (error: any) {
-    throw new Error(error.message);
   }
 };
 
@@ -53,16 +61,80 @@ const resendOtp = async (email: string) => {
     switch (response.status) {
       case 200:
         return response.data;
+      default:
+        throw new Error("Something went wrong");
+    }
+  } catch (error: any) {
+    switch (error.response.status) {
       case 404:
         throw new Error("User not found");
       case 400:
         throw new Error("User already verified");
       default:
-        throw new Error("Something went wrong");
+        throw new Error(error.message);
     }
-  } catch (error: any) {
-    throw new Error(error.message);
   }
 };
 
-export { createUser, verifyUser, resendOtp };
+type LoginDataType = {
+  email: string;
+  password: string;
+};
+
+const loginUser = async (formData: LoginDataType) => {
+  try {
+    const response = await Axios.post("/user/login", formData);
+
+    switch (response.status) {
+      case 200:
+        return response.data;
+      default:
+        throw new Error("Something went wrong");
+    }
+  } catch (error: any) {
+    switch (error.response.status) {
+      case 400:
+        throw new Error("Bad request");
+      case 401:
+        throw new Error("Invalid credentials");
+      case 404:
+        throw new Error("User not found");
+      default:
+        throw new Error(error.message);
+    }
+  }
+};
+
+const refreshToken = async () => {
+  try {
+    const response = await Axios.post("/user/token/refresh", {
+      refreshToken: Cookies.get("refreshToken"),
+    });
+
+    switch (response.status) {
+      case 200:
+        localStorage.setItem("accessToken", response.data.accessToken);
+        return response.data;
+      default:
+        throw new Error("Something went wrong");
+    }
+  } catch (error: any) {
+    switch (error.response.status) {
+      case 400:
+        throw new Error("Bad request");
+      case 401:
+        throw new Error("Invalid credentials");
+      case 404:
+        throw new Error("User not found");
+      default:
+        throw new Error(error.message);
+    }
+  }
+};
+
+const logOut = () => {
+  localStorage.removeItem("accessToken");
+  Cookies.remove("refreshToken");
+};
+
+export { createUser, verifyUser, resendOtp, loginUser, refreshToken, logOut };

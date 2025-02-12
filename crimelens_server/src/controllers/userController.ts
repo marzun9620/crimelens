@@ -1,18 +1,10 @@
-import { Hono } from "hono";
+import { Hono, type Context } from "hono";
+import { env } from "hono/adapter";
 import { db } from "../db/db.ts";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import { type UploadApiOptions, v2 as cloudinary } from "cloudinary";
-import crypto from "node:crypto";
-import emailjs from "@emailjs/browser";
-import { toast } from "sonner";
-import type { User } from "../../../models/User.ts";
-
-const JWT_SECRET = crypto.randomBytes(64).toString("hex");
-const JWT_REFRESH_SECRET = crypto.randomBytes(64).toString("hex");
-
-console.log("JWT_SECRET:", JWT_SECRET);
-console.log("JWT_REFRESH_SECRET:", JWT_REFRESH_SECRET);
+import "dotenv/config";
 
 cloudinary.config({
   cloud_name: "da8v9ysli",
@@ -51,7 +43,7 @@ userController.post("/register", async (c) => {
         cloudinaryOption
       );
       imageUrl = uploadResult.secure_url;
-    } catch (error: any) {
+    } catch (error: unknown) {
       return c.json({ error: "Failed to upload profile image" }, 500);
     }
   }
@@ -86,7 +78,7 @@ userController.post("/register", async (c) => {
   );
 });
 
-userController.post("/login", async (c) => {
+userController.post("/login", async (c: Context) => {
   const { email, password } = await c.req.json();
   const user = await db.users.findOne({ email });
   if (!user) {
@@ -99,11 +91,16 @@ userController.post("/login", async (c) => {
   }
 
   const payload = { id: user.id, email: user.email };
+  const JWT_SECRET = process.env.JWT_SECRET as string;
+  const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string;
+
   const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
   const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
     expiresIn: "7d",
   });
 
+  c.set("user", payload);
+  c.status(200);
   return c.json({ accessToken, refreshToken });
 });
 
@@ -138,7 +135,7 @@ userController.post("/resend-otp", async (c) => {
 
 userController.post("/verify-email", async (c) => {
   const { email, otp } = await c.req.json();
-  const user: any = await db.users.findOne({ email });
+  const user = await db.users.findOne({ email });
 
   if (!user) {
     return c.json({ error: "User not found" }, 404);
@@ -172,12 +169,17 @@ userController.post("/verify-email", async (c) => {
 userController.post("/token/refresh", async (c) => {
   const { refreshToken } = await c.req.json();
   try {
+    const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string;
+    const JWT_SECRET = process.env.JWT_SECRET as string;
+
     const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET);
     const newAccessToken = jwt.sign(
       { id: (payload as any).id, email: (payload as any).email },
       JWT_SECRET,
       { expiresIn: "1h" }
     );
+
+    c.status(200);
     return c.json({ accessToken: newAccessToken });
   } catch (error) {
     return c.json({ error: "Invalid refresh token" }, 401);

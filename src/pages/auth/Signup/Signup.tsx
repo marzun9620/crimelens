@@ -101,7 +101,6 @@ const Signup: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (!termsChecked) {
@@ -256,7 +255,7 @@ const Signup: React.FC = () => {
             <span className="text-gray-300 mt-4">
               Already have an account?{" "}
               <Link
-                to={"/login"}
+                to={"/"}
                 style={{ color: "#66fcf1", cursor: "pointer" }}
               >
                 Login here

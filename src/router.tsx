@@ -19,6 +19,7 @@ import Signup from "./pages/auth/Signup/Signup";
 import AlertUpdate from "./pages/profile/alert-update/AlertUpdate";
 import Notification from "./pages/profile/alert-update/notification/Notification";
 import Emergency from "./pages/profile/alert-update/emergency/Emergency";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -30,18 +31,22 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "/",
+        path: "",
         element: <Login />,
         children: [],
       },
       {
-        path: "/signup",
+        path: "signup",
         element: <Signup />,
         children: [],
       },
       {
         path: "profile",
-        element: <ProfileLayout />,
+        element: (
+          <ProtectedRoute>
+            <ProfileLayout />
+          </ProtectedRoute>
+        ),
         children: [
           {
             path: "general",

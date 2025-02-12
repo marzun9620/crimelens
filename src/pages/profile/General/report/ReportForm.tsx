@@ -1,246 +1,232 @@
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { UploadCloud, Camera, MapPin, Send } from "lucide-react";
+"use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Siren } from "lucide-react";
+
+const formSchema = z.object({
+  title: z.string().min(2, {
+    message: "Title must be at least 2 characters.",
+  }),
+  image: z
+    .instanceof(FileList)
+    .refine((files) => files.length > 0, "Image is required."),
+  video: z.instanceof(FileList).optional(),
+  division: z.string({
+    required_error: "Please select a division.",
+  }),
+  district: z.string({
+    required_error: "Please select a district.",
+  }),
+  crimeTime: z.string({
+    required_error: "Please select the time of the crime.",
+  }),
+});
+
+// Mock data for divisions and districts
 const divisions = [
   "Dhaka",
-  "Chattogram",
+  "Chittagong",
   "Rajshahi",
   "Khulna",
-  "Barishal",
+  "Barisal",
   "Sylhet",
-  "Mymensingh",
   "Rangpur",
+  "Mymensingh",
 ];
 const districts = {
-  Dhaka: ["Dhaka City", "Gazipur", "Narayanganj"],
-  Chattogram: ["Chattogram City", "Cox’s Bazar", "Comilla"],
-  Rajshahi: ["Rajshahi City", "Pabna", "Natore"],
-  Khulna: ["Khulna City", "Jessore", "Satkhira"], 
-  Barishal: ["Barishal City", "Patuakhali", "Bhola"],
-  Sylhet: ["Sylhet City", "Habiganj", "Moulvibazar"],
-  Mymensingh: ["Mymensingh City", "Jamalpur", "Sherpur"],
-  Rangpur: ["Rangpur City", "Dinajpur", "Thakurgaon"],
+  Dhaka: ["Dhaka", "Gazipur", "Narayanganj"],
+  Chittagong: ["Chittagong", "Cox's Bazar", "Comilla"],
+  // Add more districts as needed
 };
 
-const ReportForm: React.FC = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    division: "",
-    district: "",
-    crimeTime: "",
-    image: null as File | null,
-    video: null as File | null,
+export default function ReportCrime() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+    },
   });
 
-  const [aiDescription, setAiDescription] = useState(""); // AI-generated description
-  const [loadingAI, setLoadingAI] = useState(false);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+  }
 
-  // Handle input changes
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  // Handle file upload
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: "image" | "video"
-  ) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData({ ...formData, [type]: file });
-      toast.success(
-        `${type === "image" ? "Image" : "Video"} uploaded successfully`
-      );
-    }
-  };
-
-  // Generate AI description
-  const generateDescription = () => {
-    if (!formData.image) {
-      toast.error("Please upload an image first for AI description");
-      return;
-    }
-    setLoadingAI(true);
-    setTimeout(() => {
-      setAiDescription(
-        "AI-generated description: The image indicates a possible crime scene with unusual activities."
-      );
-      setLoadingAI(false);
-      toast.success("AI-generated description added!");
-    }, 2000); // Simulating AI response time
-  };
-
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !formData.title ||
-      !formData.description ||
-      !formData.division ||
-      !formData.district ||
-      !formData.crimeTime
-    ) {
-      toast.error("Please fill all required fields");
-      return;
-    }
-    toast.success("Crime report submitted successfully!");
-    console.log("Submitted Data:", formData);
+  const handleGenerateAIDescription = () => {
+    // Implement AI description generation
+    console.log("Generating AI description...");
   };
 
   return (
-    <div className="min-h-screen bg-background text-white p-4 md:p-6">
-      <div className="max-w-3xl mx-auto">
-        <Card className="bg-card">
-          <CardHeader>
-            <CardTitle className="text-foreground text-center text-xl md:text-2xl">
-              🚨 Report a Crime
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Title */}
-              <div>
-                <Label htmlFor="title">Crime Title</Label>
-                <Input
-                  type="text"
-                  name="title"
-                  id="title"
-                  placeholder="Enter crime title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  required
-                  className="bg-gray-800 text-white border-gray-700"
-                />
-              </div>
-
-              {/* Upload Image/Video */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Image Upload */}
-                <div>
-                  <Label htmlFor="image">Upload Image</Label>
-                  <Input
-                    type="file"
-                    id="image"
-                    accept="image/*"
-                    onChange={(e) => handleFileChange(e, "image")}
-                    className="bg-gray-800 text-white border-gray-700"
-                  />
-                  <Button
-                    type="button"
-                    className="mt-2 flex items-center"
-                    onClick={generateDescription}
-                    disabled={loadingAI}
-                  >
-                    <UploadCloud className="mr-2" size={16} />{" "}
-                    {loadingAI ? "Generating..." : "Generate AI Description"}
-                  </Button>
-                </div>
-
-                {/* Video Upload */}
-                <div>
-                  <Label htmlFor="video">Upload Video (Optional)</Label>
-                  <Input
-                    type="file"
-                    id="video"
-                    accept="video/*"
-                    onChange={(e) => handleFileChange(e, "video")}
-                    className="bg-gray-800 text-white border-gray-700"
-                  />
-                </div>
-              </div>
-
-              {/* AI Generated Description */}
-              {aiDescription && (
-                <div>
-                  <Label>AI Generated Description</Label>
-                  <Textarea
-                    value={aiDescription}
-                    onChange={(e) => setAiDescription(e.target.value)}
-                    className="bg-gray-800 text-white border-gray-700"
-                  />
-                </div>
-              )}
-
-              {/* Division & District Selection */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Division */}
-                <div>
-                  <Label htmlFor="division">Select Division</Label>
-                  <select
-                    name="division"
-                    id="division"
-                    value={formData.division}
-                    onChange={handleChange}
-                    className="w-full bg-gray-800 text-white border-gray-700 p-2 rounded"
-                  >
-                    <option value="">Select Division</option>
-                    {divisions.map((division) => (
-                      <option key={division} value={division}>
-                        {division}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* District */}
-                <div>
-                  <Label htmlFor="district">Select District</Label>
-                  <select
-                    name="district"
-                    id="district"
-                    value={formData.district}
-                    onChange={handleChange}
-                    disabled={!formData.division}
-                    className="w-full bg-gray-800 text-white border-gray-700 p-2 rounded"
-                  >
-                    <option value="">Select District</option>
-                    {formData.division &&
-                      districts[
-                        formData.division as keyof typeof districts
-                      ]?.map((district) => (
-                        <option key={district} value={district}>
-                          {district}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Crime Time */}
-              <div>
-                <Label htmlFor="crimeTime">Crime Time</Label>
-                <Input
-                  type="datetime-local"
-                  name="crimeTime"
-                  id="crimeTime"
-                  value={formData.crimeTime}
-                  onChange={handleChange}
-                  required
-                  className="bg-gray-800 text-white border-gray-700"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <Button type="submit" className="w-full flex items-center">
-                <Send className="mr-2" size={18} /> Submit Report
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 bg-background">
+      <div className="flex items-center justify-center space-x-2 mb-6">
+        <Siren className="h-6 w-6 text-destructive" />
+        <h1 className="text-2xl font-semibold">Report a Crime</h1>
       </div>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Crime Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter crime title" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field: { onChange, value, ...field } }) => (
+                <FormItem>
+                  <FormLabel>Upload Image</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => onChange(e.target.files)}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="video"
+              render={({ field: { onChange, value, ...field } }) => (
+                <FormItem>
+                  <FormLabel>Upload Video (Optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      accept="video/*"
+                      onChange={(e) => onChange(e.target.files)}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleGenerateAIDescription}
+            className="w-full md:w-auto"
+          >
+            Generate AI Description
+          </Button>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="division"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Select Division</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Division" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {divisions.map((division) => (
+                        <SelectItem key={division} value={division}>
+                          {division}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="district"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Select District</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select District" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {form.watch("division") &&
+                        districts[
+                          form.watch("division") as keyof typeof districts
+                        ]?.map((district) => (
+                          <SelectItem key={district} value={district}>
+                            {district}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <FormField
+            control={form.control}
+            name="crimeTime"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Crime Time</FormLabel>
+                <FormControl>
+                  <Input type="datetime-local" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" className="w-full">
+            Submit Report
+          </Button>
+        </form>
+      </Form>
     </div>
   );
-};
-
-export default ReportForm;
+}

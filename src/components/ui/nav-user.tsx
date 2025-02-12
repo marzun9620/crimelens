@@ -26,6 +26,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useTheme } from "../theme-provider";
+import { toast } from "sonner";
+import { logOut } from "@/apis/userApis";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/lib/store";
 
 export function NavUser({
   user,
@@ -38,6 +42,19 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+
+  const handleLogout = () => {
+    try {
+      setAccessToken(null);
+      logOut();
+      toast.success("Logged out successfully");
+      navigate("/");
+    } catch (error) {
+      toast.error("Failed to logout");
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -106,7 +123,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>
