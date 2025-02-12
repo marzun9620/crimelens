@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import ErrorPage from "./pages/error/error";
 import { ThemeProvider } from "./components/theme-provider";
 import App from "./App";
@@ -20,6 +20,14 @@ import AlertUpdate from "./pages/profile/alert-update/AlertUpdate";
 import Notification from "./pages/profile/alert-update/notification/Notification";
 import Emergency from "./pages/profile/alert-update/emergency/Emergency";
 import ProtectedRoute from "./components/ProtectedRoute";
+
+import AdminLayout from "./AdminLayout";
+import AdminDashboard from "./admin/Dashboard";
+import Users from "./admin/Users";
+import Alert from "./admin/Alert";
+import Security from "./admin/Security";
+import Settings from "./admin/Settings";
+
 
 const router = createBrowserRouter([
   {
@@ -109,6 +117,37 @@ const router = createBrowserRouter([
             ],
           },
         ],
+      },
+      {
+        path: "admin",
+        element: <AdminLayout />,
+        children: [
+          {
+            path: "dashboard",
+            element: <AdminDashboard />,
+          },
+          {
+            path: "users",
+            element: <Users/>,
+          },
+          {
+            path: "alerts",
+            element: <Alert/>,
+          },
+          {
+            path: "security",
+            element: <Security/>,
+          },
+          {
+            path: "settings",
+            element: <Settings/>,
+          },
+        ],
+      },
+      {
+        path: "*",
+        element: <Navigate to="/admin/dashboard" replace />,
+        errorElement: <ErrorPage />,
       },
     ],
     errorElement: <ErrorPage />,
