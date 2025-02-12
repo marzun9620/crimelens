@@ -10,12 +10,14 @@ import CrimeFeed from "./pages/profile/General/crim-feed/CrimeFeed";
 import MyProfile from "./pages/profile/my-profile/MyProfile";
 import ProfileInfo from "./pages/profile/my-profile/information/ProfileInfo";
 import MyReports from "./pages/profile/my-profile/my-reports/MyReports";
-import EditProfile from "./pages/profile/my-profile/edit-profile/EditProfile";
 import Survey from "./pages/profile/survey/Survey";
 import Heatmap from "./pages/profile/survey/heatmap/Heatmap";
 import Leaderboard from "./pages/profile/survey/leaderboard/Leaderboard";
 import Login from "./pages/auth/login/Login";
 import Signup from "./pages/auth/Signup/Signup";
+import AlertUpdate from "./pages/profile/alert-update/AlertUpdate";
+import Notification from "./pages/profile/alert-update/notification/Notification";
+import Emergency from "./pages/profile/alert-update/emergency/Emergency";
 
 const router = createBrowserRouter([
   {
@@ -28,11 +30,6 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <div>Hello</div>,
-        children: [],
-      },
-      {
-        path: "/login",
         element: <Login />,
         children: [],
       },
@@ -58,7 +55,7 @@ const router = createBrowserRouter([
                 element: <ReportForm />,
               },
               {
-                path: "feed",
+                path: "crime-feed",
                 element: <CrimeFeed />,
               },
             ],
@@ -75,9 +72,19 @@ const router = createBrowserRouter([
                 path: "my-reports",
                 element: <MyReports />,
               },
+            ],
+          },
+          {
+            path: "alert-update",
+            element: <AlertUpdate />,
+            children: [
               {
-                path: "edit-profile",
-                element: <EditProfile />,
+                path: "notification",
+                element: <Notification />,
+              },
+              {
+                path: "emergency",
+                element: <Emergency />,
               },
             ],
           },

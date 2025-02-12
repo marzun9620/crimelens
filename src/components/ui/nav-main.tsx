@@ -16,6 +16,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { useSidebarStore } from "@/lib/store";
+import { useState } from "react";
 
 export function NavMain({
   items,
@@ -32,6 +33,7 @@ export function NavMain({
   }[];
 }) {
   const { expanedGroup, setExpanedGroup } = useSidebarStore();
+  const [selected, setSelected] = useState<string | null>(null);
 
   return (
     <SidebarGroup>
@@ -49,9 +51,13 @@ export function NavMain({
                 asChild
                 onClick={() => {
                   setExpanedGroup(item.title);
+                  setSelected(item.title);
                 }}
               >
-                <SidebarMenuButton tooltip={item.title}>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  className={selected === item.title ? "selected" : ""}
+                >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />

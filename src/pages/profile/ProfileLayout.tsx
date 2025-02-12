@@ -35,7 +35,7 @@ export function ProfileLayout() {
             {pathName && (
               <Breadcrumb>
                 <BreadcrumbList>
-                  {pathName.map((item, index) => {
+                  {pathName?.map((item, index) => {
                     const currentLink = `/${pathName
                       .slice(0, index + 1)
                       .join("/")}`;

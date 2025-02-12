@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import bg from "../../../assets/signupbg.jpg";
 import VerificationModal from "./VerificationModal";
+import { useNavigate } from "react-router-dom";
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
@@ -90,6 +91,7 @@ const Signup: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+  const navigate = useNavigate();
 
   return (
     <div className="animate-flicker" style={styles.container}>
@@ -160,22 +162,43 @@ const Signup: React.FC = () => {
                 </span>
               </label>
             </div>
-            <button
-              style={styles.button}
-              onMouseOver={(e) => {
-                const target = e.target as HTMLButtonElement;
-                target.style.transform = "scale(1.05)";
-                target.style.backgroundColor = "#0e1b33";
-              }}
-              onClick={() => setIsModalOpen(true)}
-              onMouseOut={(e) => {
-                const target = e.target as HTMLButtonElement;
-                target.style.transform = "scale(1)";
-                target.style.backgroundColor = "#1c3d73";
-              }}
-            >
-              Login
-            </button>
+
+            {/* Buttons */}
+            <div className="flex gap-4">
+              <button
+                style={styles.button}
+                onMouseOver={(e) => {
+                  const target = e.target as HTMLButtonElement;
+                  target.style.transform = "scale(1.05)";
+                  target.style.backgroundColor = "#0e1b33";
+                }}
+                onClick={() => setIsModalOpen(true)}
+                onMouseOut={(e) => {
+                  const target = e.target as HTMLButtonElement;
+                  target.style.transform = "scale(1)";
+                  target.style.backgroundColor = "#1c3d73";
+                }}
+              >
+                Signup
+              </button>
+              <button
+                style={styles.button}
+                onClick={() => navigate("/")}
+                onMouseOver={(e) => {
+                  const target = e.target as HTMLButtonElement;
+                  target.style.transform = "scale(1.05)";
+                  target.style.backgroundColor = "#0e1b33";
+                }}
+                onMouseOut={(e) => {
+                  const target = e.target as HTMLButtonElement;
+                  target.style.transform = "scale(1)";
+                  target.style.backgroundColor = "#1c3d73";
+                }}
+              >
+                Login
+              </button>
+            </div>
+            
           </div>
         </div>
       </div>
