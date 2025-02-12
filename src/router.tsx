@@ -14,6 +14,8 @@ import EditProfile from "./pages/profile/my-profile/edit-profile/EditProfile";
 import Survey from "./pages/profile/survey/Survey";
 import Heatmap from "./pages/profile/survey/heatmap/Heatmap";
 import Leaderboard from "./pages/profile/survey/leaderboard/Leaderboard";
+import Login from "./pages/auth/login/Login";
+import Signup from "./pages/auth/Signup/Signup";
 
 const router = createBrowserRouter([
   {
@@ -25,8 +27,18 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "home",
+        path: "/",
         element: <div>Hello</div>,
+        children: [],
+      },
+      {
+        path: "/login",
+        element: <Login />,
+        children: [],
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
         children: [],
       },
       {
