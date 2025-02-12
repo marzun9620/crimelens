@@ -88,21 +88,5 @@ export const data = {
       ],
     },
   ],
-  projects: [
-    {
-      name: "Crime Rate Across the Country of Bangladesh",
-      url: "#",
-      icon: Database,
-    },
-    {
-      name: "How to make an efficient survey heatmap for local crimes",
-      url: "#",
-      icon: WashingMachine,
-    },
-    {
-      name: "Predictive Analysis of Crime Rates",
-      url: "#",
-      icon: SquareActivity,
-    },
-  ],
+ 
 };
