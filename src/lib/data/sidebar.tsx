@@ -11,9 +11,10 @@ import avatarLogo from "../../assets/avatar.jpg";
 
 export const data = {
   user: {
-    name: "Abrar Mahir Esam",
-    email: "abrarme118@gmail.com",
+    name: "Humayra Akter",
+    email: "humayraakter25@gmail.com",
     avatar: avatarLogo,
+    className: "text-white",
   },
   teams: [
     {
