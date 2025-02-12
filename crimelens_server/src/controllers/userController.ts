@@ -198,4 +198,22 @@ userController.post("/admin/ban", async (c) => {
   return c.json({ message: "User has been banned" });
 });
 
+userController.post("/add-post", async (c: Context) => {
+  const { title, image, video, division, district, crimeTime } =
+    await c.req.json();
+  const user = c.get("user");
+  const newPost = {
+    title,
+    image,
+    video,
+    division,
+    district,
+    crimeTime,
+    user_id: Date.now(),
+    created_at: new Date(),
+  };
+  await db.posts.insertOne(newPost);
+  return c.json({ message: "Post added successfully" }, 201);
+});
+
 export default userController;

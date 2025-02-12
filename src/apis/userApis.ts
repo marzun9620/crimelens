@@ -137,4 +137,40 @@ const logOut = () => {
   Cookies.remove("refreshToken");
 };
 
-export { createUser, verifyUser, resendOtp, loginUser, refreshToken, logOut };
+const createPost = async (formData: any) => {
+  try {
+    const response = await Axios.post("/user/add-post", formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+
+    switch (response.status) {
+      case 201:
+        return response.data;
+      default:
+        throw new Error("Something went wrong");
+    }
+  } catch (error: any) {
+    switch (error.response.status) {
+      case 400:
+        throw new Error("Bad request");
+      case 401:
+        throw new Error("Invalid credentials");
+      case 404:
+        throw new Error("User not found");
+      default:
+        throw new Error(error.message);
+    }
+  }
+};
+
+export {
+  createUser,
+  verifyUser,
+  resendOtp,
+  loginUser,
+  refreshToken,
+  logOut,
+  createPost,
+};

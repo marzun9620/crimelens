@@ -50,31 +50,31 @@ const Overview = ({
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <DashboardCard
-          title="Active Surveys"
-          description="Total number of surveys +234"
+          title="Total Reports"
+          description="Total number of reports submitted"
           Icon={NotebookPen}
           value={"5"}
           upOrDown={true}
         />
         <DashboardCard
-          title="Total feedbacks"
-          description="Number of responses across all surveys"
+          title="Unsolved in local area"
+          description="Number of unsolved reports in your area"
           Icon={Contact}
-          value={"5886"}
+          value={"58"}
           upOrDown={false}
         />
         <DashboardCard
-          title="Pending Messages"
-          description="Number of messages waiting for a response"
+          title="My reports"
+          description="Number of reports you have submitted"
           Icon={NotebookPen}
           value={"125"}
           upOrDown={true}
         />
         <DashboardCard
-          title="Customer Effort Score"
-          description="Percentage of customers who found it easy to interact with your company"
+          title="Leaderboard position"
+          description="Your position in the top 10% of users"
           Icon={NotebookPen}
-          value={"64.35%"}
+          value={"6"}
           upOrDown={false}
         />
       </div>
@@ -85,7 +85,7 @@ const Overview = ({
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1 ml-2">
               <h3 className="text-white font-semibold">
-                Customer Satisfaction and Adoption
+                Performance Overview
               </h3>
               <h4 className="text-muted-foreground font-bold">
                 {selectedYear} Performance Overview

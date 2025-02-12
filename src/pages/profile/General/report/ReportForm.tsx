@@ -21,6 +21,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Siren } from "lucide-react";
+import { getDivisionsWithDistricts } from "@/lib/getDivisionInfo";
+import { run } from "@/lib/AIGenerate";
+import { useState } from "react";
+import { createPost } from "@/apis/userApis";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -41,22 +46,11 @@ const formSchema = z.object({
   }),
 });
 
-// Mock data for divisions and districts
-const divisions = [
-  "Dhaka",
-  "Chittagong",
-  "Rajshahi",
-  "Khulna",
-  "Barisal",
-  "Sylhet",
-  "Rangpur",
-  "Mymensingh",
-];
-const districts = {
-  Dhaka: ["Dhaka", "Gazipur", "Narayanganj"],
-  Chittagong: ["Chittagong", "Cox's Bazar", "Comilla"],
-  // Add more districts as needed
-};
+const divisions = getDivisionsWithDistricts().map((division) => division.name);
+const districts = getDivisionsWithDistricts().reduce((acc, division) => {
+  acc[division.name] = division.districts.map((district) => district.name);
+  return acc;
+}, {} as Record<string, string[]>);
 
 export default function ReportCrime() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -66,13 +60,17 @@ export default function ReportCrime() {
     },
   });
 
+  const [description, setDescription] = useState<string | undefined>();
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    await createPost(values);
+    toast.success("Report submitted successfully.");
+    form.reset();
   }
 
-  const handleGenerateAIDescription = () => {
-    // Implement AI description generation
-    console.log("Generating AI description...");
+  const handleGenerateAIDescription = async () => {
+    const response = await run(form.getValues("image")[0]);
+    setDescription(response);
   };
 
   return (
@@ -99,6 +97,23 @@ export default function ReportCrime() {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* if the image is availabe then show it in a tag */}
+            {form.watch("image") && (
+              <img
+                src={URL.createObjectURL(form.watch("image")[0])}
+                alt="Crime"
+                className="w-full h-48 object-cover rounded-md"
+              />
+            )}
+
+            {/* Description of the image when AI generate button is clicked */}
+            {description && (
+              <div className="bg-gray-100 p-4 rounded-md">
+                <p>{description}</p>
+              </div>
+            )}
+
+            {/* if the video is availabe then show it in a tag */}
             <FormField
               control={form.control}
               name="image"
