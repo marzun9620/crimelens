@@ -1,8 +1,7 @@
-Certainly! Here is the  README.md  file content for your project in markdown format:
 
-```markdown
+
 ### CrimeLens - Crime Reporting and Community Verification Platform
-
+```markdown
 CrimeLens is a crime reporting platform where users can upload crime images or videos, receive AI-powered analysis, and allow the community to verify authenticity through votes and comments. The platform also includes a feature to detect fake crime images using deepfake detection algorithms.
 
 ```
