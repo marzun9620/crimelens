@@ -1,10 +1,10 @@
 
 
 ### CrimeLens - Crime Reporting and Community Verification Platform
-```markdown
+
 CrimeLens is a crime reporting platform where users can upload crime images or videos, receive AI-powered analysis, and allow the community to verify authenticity through votes and comments. The platform also includes a feature to detect fake crime images using deepfake detection algorithms.
 
-```
+
 
 ### Features
 -  User Authentication  (with email, phone OTP, JWT)
